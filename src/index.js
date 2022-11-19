@@ -90,7 +90,7 @@ function CreateLaterElements(data) {
 
 async function ConvertIntoLatLon(location) {
   try {
-    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`)
+    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`);
     const json = await response.json();
     //Call GetTodayWeather function with the latitude and longitude extracted from the promise returned from the Geocoding API.
     GetTodayWeather(json[0].lat, json[0].lon);
