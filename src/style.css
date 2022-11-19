@@ -1,0 +1,69 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  grid-auto-rows: max-content;
+  text-align: center;
+  gap: 0.5rem;
+  margin: 1rem;
+  background-image: url('./bg3.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto;
+}
+
+h1 {
+  padding: 1rem 0rem;
+  font-size: 2rem;
+  border-radius: 1rem;
+}
+
+section {
+  background-image: radial-gradient( circle 588px at 31.7% 40.2%,  rgba(225,200,239,1) 21.4%, rgba(163,225,233,1) 57.1% );
+  border-radius: 2rem;
+  padding: 1rem 2rem;
+  border: 2px solid red;
+  box-shadow: 0 0 0.25rem black;
+}
+
+.weatherDisplay {
+  display: grid;
+  justify-items: center;
+  grid-template-rows: repeat(4, max-content);
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.laterDiv {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: max-content;
+  grid-auto-rows: max-content;
+  place-items: center;
+}
+
+.later > h2 {
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.7rem;
+}
+
+p.weather {
+}
+
+p.temperature {
+  font-size: 2rem;
+}
+
+p.description {
+}
+
+img.weatherIcon {
+}
