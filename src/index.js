@@ -2,7 +2,7 @@ import './style.css';
 import BuildMainPage from './BuildMainPage';
 
 const BASE_FETCH_URL = 'https://api.openweathermap.org/data/2.5/';
-const BASE_ICON_URL = 'http://openweathermap.org/img/wn/';
+const BASE_ICON_URL = 'https://openweathermap.org/img/wn/';
 const API_KEY = 'ba42e21e7e100243ba7f54f3efcbc7eb';
 const UNITS = '&units=metric';
 
@@ -90,7 +90,7 @@ function CreateLaterElements(data) {
 
 async function ConvertIntoLatLon(location) {
   try {
-    const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`);
+    const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=1&appid=${API_KEY}`);
     const json = await response.json();
     //Call GetTodayWeather function with the latitude and longitude extracted from the promise returned from the Geocoding API.
     GetTodayWeather(json[0].lat, json[0].lon);
