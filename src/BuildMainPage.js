@@ -1,9 +1,28 @@
+function Search() {
+    const form = document.createElement('form');
+    const input = document.createElement('input');
+    const button = document.createElement('button');
+
+    input.type = "search";
+    button.type = "submit";
+    //button.textContent = "searching";
+    form.action = '';
+
+    input.classList.add('searchBar');
+    button.classList.add('searchButton');
+
+    form.appendChild(input);
+    form.appendChild(button);
+
+    return form;
+}
+
 function BuildLaterSection() {
   const section = document.createElement('section');
   const header = document.createElement('h2');
 
   header.textContent = "Later today";
-  section.classList.add('later');
+  section.classList.add('laterDisplay');
 
   section.appendChild(header);
 
@@ -12,9 +31,12 @@ function BuildLaterSection() {
 
 function BuildMainPage() {
   const body = document.querySelector('body');
-  const container = document.createElement('section');
-  container.classList.add('weatherDisplay');
-  body.appendChild(container);
+  const weatherDisplay = document.createElement('section');
+  
+  weatherDisplay.classList.add('weatherDisplay');
+  
+  body.appendChild(Search());
+  body.appendChild(weatherDisplay);
   body.appendChild(BuildLaterSection());
 }
 

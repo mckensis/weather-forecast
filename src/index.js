@@ -1,144 +1,177 @@
 import './style.css';
 import BuildMainPage from './BuildMainPage';
+import ConvertLocationIntoLatLon from './ConvertLocationIntoLatLon';
+import { Today, Tomorrow } from './Dates';
+import Location from './images/locationx24.png';
 
 const BASE_FETCH_URL = 'https://api.openweathermap.org/data/2.5/';
 const BASE_ICON_URL = 'https://openweathermap.org/img/wn/';
-const BASE_GEO_URL = 'https://api.openweathermap.org/geo/1.0/direct?';
 const API_KEY = 'ba42e21e7e100243ba7f54f3efcbc7eb';
 const CELCIUS = '&units=metric';
 const FAHRENHEIT = '&units=imperial';
+let unit = CELCIUS;
 
 window.addEventListener('load', BuildMainPage);
 window.addEventListener('load', Initialise);
 
-function Initialise() {
-  ConvertIntoLatLon('Glasgow');
+//This function will display Glasgow's weather as default when the page is loaded
+async function Initialise() {
+    //ConvertLocationIntoLatLon returns latitude / longitude for a passed in variable. These are stored in the coordinates object
+    const coordinates = await ConvertLocationIntoLatLon('Glasgow');
+    unit = CELCIUS;
+    //Display today's weather
+    GetTodayWeather(coordinates, unit);
+    //Display the forecast for later on today
+    GetLaterForecast(coordinates, unit);
 }
 
-//Returns today's date
-function Today() {
-  let date = new Date();
-  let day = date.getDate();
-  let month = date.getMonth() + 1;
-  let year = date.getFullYear();
-  let currentDate = `${year}-${month}-${day}`;
-  return currentDate;
-}
-
-//Returns tomorrow's date
-function Tomorrow() {
-  let date = new Date();
-  let tomorrow = new Date(date);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  let day = tomorrow.getDate();
-  let month = tomorrow.getMonth() + 1;
-  let year = tomorrow.getFullYear();
-  let currentDate = `${year}-${month}-${day}`;
-  return currentDate;
+//Converts the time to the time when the weather api was called,
+//Also takes into consideration the time zone for the location
+function ConvertUnixTime(data) {
+    let localTime = data.time + data.timezone;
+    let time = new Date(localTime * 1000).toLocaleString();
+    let split = time.split(" ");
+    //Remove the seconds from the time so that its just HH:MM
+    split = split[1].substring(0, split[1].length -3);
+    console.log(split);
+    return split;
 }
 
 function CreateElements(data) {
-  const section = document.querySelector('.weatherDisplay');
-  const header = document.createElement('h2');
-  const weather = document.createElement('p');
-  const temp = document.createElement('p');
-  const description = document.createElement('p');
-  const icon = document.createElement('img');
-  
-  header.textContent = data.city;
-  weather.textContent = data.weather;
-  temp.textContent = `Currently ${data.temperature} °C`;
-  description.textContent = data.description;
-  icon.src = `${BASE_ICON_URL}${data.icon}@4x.png`;
+    const section = document.querySelector('.weatherDisplay');
+    const header = document.createElement('h2');
+    const weather = document.createElement('p');
+    const temp = document.createElement('p');
+    const icon = document.createElement('img');
+    const details = document.createElement('div');
+    const location = document.createElement('img');
+    const top = document.createElement('div');
+    const time = document.createElement('p');
+    let unit;
 
-  header.classList.add('city');
-  weather.classList.add('weather');
-  temp.classList.add('temperature');
-  description.classList.add('description');
-  icon.classList.add('weatherIcon');
+    let weatherTime = ConvertUnixTime(data);
+    console.log(weatherTime);
 
-  section.appendChild(header);
-  section.appendChild(temp);
-  section.appendChild(weather);
-  section.appendChild(icon);
+    if (data.unit.includes("imperial")) {
+        unit = '℉';
+    } else {
+        unit = '℃';
+    }
+
+    time.textContent = weatherTime;
+    location.src = Location;
+    header.textContent = data.city;
+    weather.textContent = data.weather;
+    temp.textContent = `${data.temperature}${unit}`;
+    icon.src = `${BASE_ICON_URL}${data.icon}@2x.png`;
+
+    details.classList.add('details');
+    top.classList.add('heading');
+    
+    top.appendChild(location);
+    top.appendChild(header);
+    top.appendChild(time);
+    
+    details.appendChild(weather);
+    details.appendChild(temp);
+    details.appendChild(icon);
+    
+    section.appendChild(top)
+    section.appendChild(details);
+}
+
+function CreateElementsBackup(data) {
+    const section = document.querySelector('.weatherDisplay');
+    const header = document.createElement('h2');
+    const weather = document.createElement('p');
+    const temp = document.createElement('p');
+    const description = document.createElement('p');
+    const icon = document.createElement('img');
+
+    header.textContent = data.city;
+    weather.textContent = data.weather;
+    temp.textContent = `Currently ${data.temperature}°C`;
+    description.textContent = data.description;
+    icon.src = `${BASE_ICON_URL}${data.icon}@4x.png`;
+
+    header.classList.add('city');
+    temp.classList.add('temperature');
+
+    section.appendChild(header);
+    section.appendChild(temp);
+    section.appendChild(icon);
+    section.appendChild(weather);
 }
 
 function CreateLaterElements(data) {
-  const section = document.querySelector('.later');
+    const section = document.querySelector('.laterDisplay');
 
-  const div = document.createElement('div');
-  const weather = document.createElement('p');
-  const temp = document.createElement('p');
-  const icon = document.createElement('img');
-  const time = document.createElement('p');
-  
-  weather.textContent = data.weather;
-  temp.textContent = `${data.temperature} °C`;
-  icon.src = `${BASE_ICON_URL}${data.icon}.png`;
-  time.textContent = data.time;
+    const div = document.createElement('div');
+    const weather = document.createElement('p');
+    const temp = document.createElement('p');
+    const icon = document.createElement('img');
+    const time = document.createElement('p');
 
-  weather.classList.add('weatherLater');
-  temp.classList.add('temperatureLater');
-  icon.classList.add('weatherIconLater');
-  time.classList.add('timeLater');
-  div.classList.add('laterDiv');
+    weather.textContent = data.weather;
+    temp.textContent = `${data.temperature} °C`;
+    icon.src = `${BASE_ICON_URL}${data.icon}.png`;
+    time.textContent = data.time;
 
-  div.appendChild(time);
-  div.appendChild(weather);
-  div.appendChild(icon);
-  div.appendChild(temp);
-  section.appendChild(div);
-}
+    div.classList.add('weatherItemLater');
 
-async function ConvertIntoLatLon(location) {
-  try {
-    const response = await fetch(`${BASE_GEO_URL}q=${location}&limit=1&appid=${API_KEY}`);
-    const json = await response.json();
-    //Call GetTodayWeather function with the latitude and longitude extracted from the promise returned from the Geocoding API.
-    GetTodayWeather(json[0].lat, json[0].lon);
-    GetNextForecast(json[0].lat, json[0].lon);
-  } catch (error) {
-    console.log(error);
-    //TO-DO: do something with error
-  }
-}
+    div.appendChild(time);
+    div.appendChild(weather);
+    div.appendChild(temp);
+    div.appendChild(icon);
 
-async function GetTodayWeather(lat, lon) {
-  try {
-    const response = await fetch(`${BASE_FETCH_URL}weather?lat=${lat}&lon=${lon}&appid=${API_KEY}${CELCIUS}`);
-    const json = await response.json();
-    const city = json.name;
-    const weather = json.weather[0].main;
-    const temperature = Math.round(json.main.temp * 10 / 10);
-    const description = json.weather[0].description;
-    const icon = json.weather[0].icon;
-    CreateElements({ city, weather, temperature, description, icon });
-  } catch (error) {
-    console.log(error);
-  }
-}
+    const hr = document.createElement('hr');
 
-async function GetNextForecast(lat, lon) {
-  try {
-    const response = await fetch(`${BASE_FETCH_URL}forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}${CELCIUS}`);
-    const json = await response.json();
+    section.appendChild(div);
 
-    for (const item of json.list) {
-      let forecastDate = item.dt_txt.split(" ");
-      //If the forecast is still for the current day, append data to the "Later" section
-      if (forecastDate[0] === Today()) {
-        const weather = item.weather[0].main;
-        const temperature = Math.round(item.main.temp * 10) / 10;
-        const icon = item.weather[0].icon;
-        const time = forecastDate[1].substring(0, forecastDate[1].length - 3)
-        CreateLaterElements({weather, temperature, icon, time});
-      //If the forecast is for tomorrow, append data to the "Tomorrow" section
-      } else if (forecastDate[0] === Tomorrow()) {
-        console.log(item);
-      }
+    //Append a horizontal line 
+    if (time.textContent !== "21:00") {
+        section.appendChild(hr);
     }
-      //there are 9 items in the list for each day
-  } catch (error) {
-    console.log(error);
-  }
+}
+
+async function GetTodayWeather(coordinates, unit) {
+    try {
+        let response = await fetch(`${BASE_FETCH_URL}weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${API_KEY}${unit}`);
+        let json = await response.json();
+        let city = json.name;
+        let time = json.dt;
+        let timezone = json.timezone;
+        let weather = json.weather[0].main;
+        let temperature = Math.round(json.main.temp * 10 / 10);
+        let description = json.weather[0].description;
+        let icon = json.weather[0].icon;
+        console.log(json);
+        CreateElements({ city, weather, temperature, description, icon, time, timezone, unit });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function GetLaterForecast(coordinates, unit) {
+    try {
+        const response = await fetch(`${BASE_FETCH_URL}forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${API_KEY}${unit}`);
+        const json = await response.json();
+
+        for (const item of json.list) {
+            let forecastDate = item.dt_txt.split(" ");
+            //If the forecast is still for the current day, append data to the "Later" section
+            if (forecastDate[0] === Today()) {
+                const weather = item.weather[0].main;
+                const temperature = Math.round(item.main.temp * 10) / 10;
+                const icon = item.weather[0].icon;
+                const time = forecastDate[1].substring(0, forecastDate[1].length - 3)
+                CreateLaterElements({weather, temperature, icon, time});
+                //If the forecast is for tomorrow, append data to the "Tomorrow" section
+            } else if (forecastDate[0] === Tomorrow()) {
+                //Do something with tomorrow's forecast data
+            }
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }
