@@ -62,7 +62,6 @@ async function Search() {
     }
 }
 
-
 function RemoveChildren(section) {
     if (!section.classList.contains('weatherDisplay')) {
         while (section.children.length > 1) {
@@ -125,6 +124,7 @@ function CreateElements(data) {
     weather.textContent = data.weather;
     temp.textContent = `${data.temperature}${unit}`;
     icon.src = `${BASE_ICON_URL}${data.icon}@2x.png`;
+    icon.title = weather.textContent;
 
     details.classList.add('details');
     top.classList.add('heading');
@@ -141,8 +141,8 @@ function CreateElements(data) {
     section.appendChild(details);
 }
 
-function CreateTomorrowElements(data) {
-    const section = document.querySelector('.tomorrowDisplay');
+function CreateLaterElements(data) {
+    const section = document.querySelector('.laterDisplay');
 
     const div = document.createElement('div');
     const weather = document.createElement('p');
@@ -154,6 +154,7 @@ function CreateTomorrowElements(data) {
     temp.textContent = `${data.temperature} °C`;
     icon.src = `${BASE_ICON_URL}${data.icon}.png`;
     time.textContent = data.time;
+    icon.title = weather.textContent;
 
     div.classList.add('weatherItemLater');
 
@@ -172,8 +173,8 @@ function CreateTomorrowElements(data) {
     }
 }
 
-function CreateLaterElements(data) {
-    const section = document.querySelector('.laterDisplay');
+function CreateTomorrowElements(data) {
+    const section = document.querySelector('.tomorrowDisplay');
 
     const div = document.createElement('div');
     const weather = document.createElement('p');
@@ -185,6 +186,7 @@ function CreateLaterElements(data) {
     temp.textContent = `${data.temperature} °C`;
     icon.src = `${BASE_ICON_URL}${data.icon}.png`;
     time.textContent = data.time;
+    icon.title = weather.textContent;
 
     div.classList.add('weatherItemLater');
 
