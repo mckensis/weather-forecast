@@ -13,6 +13,14 @@ let unit = CELCIUS;
 
 window.addEventListener('load', BuildMainPage);
 window.addEventListener('load', Initialise);
+window.addEventListener('load', SubmitForm);
+
+function SubmitForm() {
+    document.querySelector('form').addEventListener("submit", (e) => {
+        e.preventDefault();
+        Search();
+    });
+}
 
 //This function will display Glasgow's weather as default when the page is loaded
 async function Initialise() {
@@ -23,6 +31,59 @@ async function Initialise() {
     GetTodayWeather(coordinates, unit);
     //Display the forecast for later on today
     GetLaterForecast(coordinates, unit);
+}
+
+function DisplayError() {
+    const input = document.querySelector('.searchBar');
+    input.setCustomValidity('Please Enter a valid location');
+    input.reportValidity();
+}
+
+async function Search() {
+    const input = document.querySelector('.searchBar');
+    if (!input.value) {
+        return;
+    }
+
+    try {
+        const coordinates = await ConvertLocationIntoLatLon(input.value);    
+        if (!coordinates) {
+            return;
+        }
+
+        ClearElements();
+        GetTodayWeather(coordinates, unit);
+        GetLaterForecast(coordinates, unit);
+        input.value = ''
+        input.blur();
+    } catch (error) {
+        console.log(error);
+        return;
+    }
+}
+
+
+function RemoveChildren(section) {
+    if (!section.classList.contains('weatherDisplay')) {
+        while (section.children.length > 1) {
+            section.removeChild(section.lastChild);
+        }        
+    } else {
+        while (section.hasChildNodes()) {
+            section.removeChild(section.lastChild);
+        }
+    }
+}
+
+function ClearElements() {
+    
+    const weather = document.querySelector('.weatherDisplay');
+    const later = document.querySelector('.laterDisplay');
+    const tomorrow = document.querySelector('.tomorrowDisplay');
+
+    RemoveChildren(weather);
+    RemoveChildren(later);
+    RemoveChildren(tomorrow);
 }
 
 //Converts the time to the time when the weather api was called,
@@ -73,34 +134,42 @@ function CreateElements(data) {
     top.appendChild(time);
     
     details.appendChild(weather);
-    details.appendChild(temp);
     details.appendChild(icon);
+    details.appendChild(temp);
     
     section.appendChild(top)
     section.appendChild(details);
 }
 
-function CreateElementsBackup(data) {
-    const section = document.querySelector('.weatherDisplay');
-    const header = document.createElement('h2');
+function CreateTomorrowElements(data) {
+    const section = document.querySelector('.tomorrowDisplay');
+
+    const div = document.createElement('div');
     const weather = document.createElement('p');
     const temp = document.createElement('p');
-    const description = document.createElement('p');
     const icon = document.createElement('img');
+    const time = document.createElement('p');
 
-    header.textContent = data.city;
     weather.textContent = data.weather;
-    temp.textContent = `Currently ${data.temperature}°C`;
-    description.textContent = data.description;
-    icon.src = `${BASE_ICON_URL}${data.icon}@4x.png`;
+    temp.textContent = `${data.temperature} °C`;
+    icon.src = `${BASE_ICON_URL}${data.icon}.png`;
+    time.textContent = data.time;
 
-    header.classList.add('city');
-    temp.classList.add('temperature');
+    div.classList.add('weatherItemLater');
 
-    section.appendChild(header);
-    section.appendChild(temp);
-    section.appendChild(icon);
-    section.appendChild(weather);
+    div.appendChild(time);
+    div.appendChild(weather);
+    div.appendChild(temp);
+    div.appendChild(icon);
+
+    const hr = document.createElement('hr');
+
+    section.appendChild(div);
+
+    //Append a horizontal line 
+    if (time.textContent !== "21:00") {
+        section.appendChild(hr);
+    }
 }
 
 function CreateLaterElements(data) {
@@ -134,6 +203,12 @@ function CreateLaterElements(data) {
     }
 }
 
+//Remove the Later section if there is no data for later today
+function NoLaterData() {
+    const section = document.querySelector('.laterDisplay');
+    section.parentElement.removeChild(section);
+}
+
 async function GetTodayWeather(coordinates, unit) {
     try {
         let response = await fetch(`${BASE_FETCH_URL}weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${API_KEY}${unit}`);
@@ -149,6 +224,7 @@ async function GetTodayWeather(coordinates, unit) {
         CreateElements({ city, weather, temperature, description, icon, time, timezone, unit });
     } catch (error) {
         console.log(error);
+        return;
     }
 }
 
@@ -164,14 +240,24 @@ async function GetLaterForecast(coordinates, unit) {
                 const weather = item.weather[0].main;
                 const temperature = Math.round(item.main.temp * 10) / 10;
                 const icon = item.weather[0].icon;
-                const time = forecastDate[1].substring(0, forecastDate[1].length - 3)
+                const time = forecastDate[1].substring(0, forecastDate[1].length - 3);
                 CreateLaterElements({weather, temperature, icon, time});
                 //If the forecast is for tomorrow, append data to the "Tomorrow" section
             } else if (forecastDate[0] === Tomorrow()) {
                 //Do something with tomorrow's forecast data
+                const weather = item.weather[0].main;
+                const temperature = Math.round(item.main.temp * 10) / 10;
+                const icon = item.weather[0].icon;
+                const time = forecastDate[1].substring(0, forecastDate[1].length - 3);
+                CreateTomorrowElements({weather, temperature, icon, time});
             }
+        }
+        const later = document.querySelector('.laterDisplay');
+        if (later.children.length < 2) {
+            NoLaterData();
         }
     } catch (error) {
         console.log(error);
+        return;
     }
 }

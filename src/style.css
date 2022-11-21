@@ -4,32 +4,33 @@
     box-sizing: border-box;
 }
 
+html {
+}
+
 body {
     display: grid;
     grid-auto-rows: max-content;
     text-align: center;
     gap: 1rem;
     margin: 1rem;
-    background-image: url('./bg3.jpg');
+    height: 100%;
+    background: linear-gradient(#15245F, #A282C3, #F29FA9);
     background-repeat: no-repeat;
-}
-
-h1 {
-    padding: 1rem 0rem;
-    font-size: 2rem;
-    border-radius: 1rem;
+    background-attachment: fixed;
+    font-family: sans-serif;
 }
 
 h2 {
     font-size: 1.7rem;
+    letter-spacing: 1px;
 }
 
 section {
-    background-image: linear-gradient(rgba(225,200,239), rgba(163,225,233));
+    background: linear-gradient(rgba(225,200,239), rgba(163,225,233));
     border-radius: 2rem;
     padding: 1rem 2rem;
-    border: 2px solid red;
-    box-shadow: 0 0 0.25rem black;
+    border: 2px solid #3A606E;
+    box-shadow: 0 0 1rem black;
 }
 
 .weatherDisplay {
@@ -43,31 +44,39 @@ section {
     display: grid;
     grid-auto-flow: column;
     grid-template-columns: min-content 1fr min-content;
-    grid-template-rows: 3rem;
-    place-content: center;
+    grid-template-rows: max-content;
     place-items: center;
     width: 100%;
-    gap: 0.5rem;
+    gap: 0.25rem;
 }
 
 .heading :nth-child(2) {
     justify-self: left;
 }
 
+/* Time */
+.heading > p {
+    font-size: 1.5rem;
+}
+
+/* Current Weather / Icon / Temperature */
 .weatherDisplay > .details {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 1fr 1fr max-content;
+    grid-template-columns: 1fr 1fr 1fr;
     place-content: center;
     place-items: center;
     width: 100%;
 }
 
-.laterDisplay {
+
+.laterDisplay,
+.tomorrowDisplay {
     gap: 1px;
 }
 
-.laterDisplay > h2 {
+.laterDisplay > h2,
+.tomorrowDisplay > h2 {
     margin-bottom: 1rem;
 }
 
@@ -86,7 +95,7 @@ section {
 form {
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 1fr 3rem;
+    grid-template-columns: 1fr;
     gap: 0.5rem;
 }
 
@@ -94,7 +103,7 @@ form > input {
     outline: none;
     padding: 0.5rem 1rem;
     border-radius: 1rem;
-    border: 2px solid red;
+    border: 2px solid #3A606E;
     font-size: 1rem;
 }
 
@@ -104,4 +113,65 @@ form > button {
     background-position: center;
     border: none;
     border-radius: 50%;
+}
+
+@media (min-width: 400px) {
+
+    .heading > p {
+        font-size: calc(initial + 2vw);
+    }
+
+    h2 {
+        font-size: calc(1.5rem + 2vw);
+    }
+
+}
+
+@media (min-width: 700px) {
+    body {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    form {
+        grid-column: 1 / -1;
+    }
+
+    .weatherDisplay {
+        grid-column: 1 / -1;
+    }
+
+    .laterDisplay {
+        grid-column: 1;
+    }
+}
+
+@media (min-width: 1024px) {
+    body {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+        gap: 1.5rem;
+    }
+
+    .weatherDisplay > .heading {
+        grid-template-columns: 1fr;
+        grid-auto-flow: row;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .heading :nth-child(2) {
+        justify-self: center;
+    }
+
+    h2 {
+        font-size: 3rem;
+    }
+
+    .heading > p {
+        font-size: 3rem;
+    }
+
+    .details > p {
+        font-size: 2rem;
+    }
 }
