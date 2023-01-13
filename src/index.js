@@ -1,16 +1,15 @@
 import './style.css';
-import BuildMainPage from './BuildMainPage';
 import Search from './Search';
+import BuildMainPage from './BuildMainPage';
 import { DisplayWeather, DisplayForecast } from './DisplayData';
-import { GetWeather, GetForecast } from './APIFunctions';
-import ConvertLocationIntoLatLon from './ConvertLocationIntoLatLon';
+import { GetWeather, GetForecast, ConvertLocationIntoLatLon  } from './APIFunctions';
 
 window.addEventListener('load', BuildMainPage);
 window.addEventListener('load', Initialise);
 
 //This function will display Glasgow's weather as default when the page is loaded
 async function Initialise() {
-    //Event Listener for searching a city name
+    //Event Listener for searching a location name
     document.querySelector('form').addEventListener("submit", (e) => {
         e.preventDefault();
         Search();

@@ -3,6 +3,7 @@ import Location from './images/locationx24.png';
 
 const BASE_ICON_URL = 'https://openweathermap.org/img/wn/';
 
+//Displays the weather on the page
 function DisplayWeather(weather) {
     const section = document.querySelector('.weatherDisplay');
     const header = document.createElement('h2');
@@ -15,6 +16,7 @@ function DisplayWeather(weather) {
     const time = document.createElement('p');
     let unit = '°C';
 
+    //Set the content of the elements based on the data passed in 
     time.textContent = weather.time;
     location.src = Location;
     header.textContent = `${weather.city}, ${weather.country}`;
@@ -38,20 +40,24 @@ function DisplayWeather(weather) {
     section.appendChild(details);
 }
 
+//Displays the forecast on the page
 function DisplayForecast(forecast) {
     const later = document.querySelector('.laterDisplay');
     const tomorrow = document.querySelector('.tomorrowDisplay');
     let parent;
 
     for (const key in forecast) {
+        //Make sure we are appending the forecast data to the correct section
         if (forecast[key].date === Today()) {
             parent = later;
         } else {
             parent = tomorrow;
         
         }
-        forecast[key].forEach(item => {
 
+        //For each item in the forecast,
+        //Create the appropriate elements and append them to the page
+        forecast[key].forEach(item => {
             const div = document.createElement('div');
             const forecast = document.createElement('p');
             const temp = document.createElement('p');
@@ -69,7 +75,7 @@ function DisplayForecast(forecast) {
             div.appendChild(icon);
             parent.appendChild(div);
             
-            //Append a horizontal line 
+            //Append a horizontal line if it's not the last item
             if (time.textContent !== "21:00") {
                 const hr = document.createElement('hr');
                 parent.appendChild(hr);

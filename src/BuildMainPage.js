@@ -1,20 +1,15 @@
 function Search() {
     const form = document.createElement('form');
     const input = document.createElement('input');
-    //const button = document.createElement('button');
 
+    form.action = '';
     input.type = 'search';
     input.placeholder = 'Enter a location here...'
-    //button.type = "submit";
-    //button.textContent = "searching";
-    form.action = '';
-
+    
     input.classList.add('searchBar');
-    //button.classList.add('searchButton');
-
+    
     form.appendChild(input);
-    //form.appendChild(button);
-
+    
     return form;
 }
 
@@ -23,6 +18,7 @@ function BuildTomorrowSection() {
     const header = document.createElement('h2');
 
     header.textContent = "Tomorrow";
+    
     section.classList.add('tomorrowDisplay');
 
     section.appendChild(header);
@@ -35,6 +31,7 @@ function BuildLaterSection() {
   const header = document.createElement('h2');
 
   header.textContent = "Later";
+  
   section.classList.add('laterDisplay');
 
   section.appendChild(header);
