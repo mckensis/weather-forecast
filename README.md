@@ -6,15 +6,14 @@
 
 - Created to practice use of async/await
 - Uses the OpenWeather 'Current Weather Data' and '5 Day / 3 Hour Forecast' APIs
-- The site will display Glasgow's weather as default when the page is loaded
+- The site will display Glasgow's current weather as default when the page is loaded
+- The bottom half of the page will display 3 hour forecasts for later in the day (left side) and tomorrow (right side) 
 
 ## How to Use
 
 1. Enter a location in the search bar at the top
 2. Press enter to search
-3. Current weather for the location will display in the top section
-4. Today's forecast for that location will display on the left section
-5. Tomorrow's forecast for that location will display on the right section
+3. The display will update
 
 ## Screenshot
 

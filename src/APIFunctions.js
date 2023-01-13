@@ -3,15 +3,20 @@ import { ConvertJSONIntoWeatherData, ConvertJSONIntoForecastData } from './Conve
 const BASE_FETCH_URL = 'https://api.openweathermap.org/data/2.5/';
 const API_KEY = 'ba42e21e7e100243ba7f54f3efcbc7eb';
 
-//Performs an API call with the coordinates provides
+function DisplayError(this, error) {
+    console.log(this);
+}
+
+//Performs an API call for the current weather at the coordinates provided
 async function GetWeather(coordinates) {
     try {
         let response = await fetch(`${BASE_FETCH_URL}weather?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${API_KEY}&units=metric`);
         let json = await response.json();
+        //Extract data from the json which we want to display i.e. City name, weather, etc.
         let data = ConvertJSONIntoWeatherData(json);
         return data;
     } catch (error) {
-        //DisplayError(error);
+        DisplayError(this, error);
         console.log(error);
         return;
     }
