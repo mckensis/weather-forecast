@@ -26,6 +26,6 @@
 
     * Currently the 'Later' forecast will display data for later in the user's location when they make the API call, rather than the search location.
     * I.E. If you are in UK and search for a location in the US, the later forecast will be from the UK timezone rather than having data for the previous hours due to the earlier time in US.
-    * This is unfortunately how the OpenWeather 5 Day / 3 Hour forecast API functions.
+    * This is unfortunately a limitation of the OpenWeather 5 Day / 3 Hour forecast API.
 
 2. Display the weather for the user's current location when the page is loaded
