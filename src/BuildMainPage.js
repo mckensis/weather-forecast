@@ -34,7 +34,7 @@ function BuildLaterSection() {
   const section = document.createElement('section');
   const header = document.createElement('h2');
 
-  header.textContent = "Later Today";
+  header.textContent = "Later";
   section.classList.add('laterDisplay');
 
   section.appendChild(header);
