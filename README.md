@@ -6,6 +6,7 @@
 
 - Created to practice use of async/await
 - Uses the OpenWeather 'Current Weather Data' and '5 Day / 3 Hour Forecast' APIs
+- Uses the OpenWeather 'Geocoding' API to convert location names into latitude / longitude coordinates
 - The site will display Glasgow's current weather as default when the page is loaded
 - The bottom half of the page will display 3 hour forecasts for later in the day (left side) and tomorrow (right side) 
 
