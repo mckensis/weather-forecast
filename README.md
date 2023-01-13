@@ -22,6 +22,7 @@
 ## Future Improvements
 
 1. Allow the units to be changed between metric & imperial
+
 2. Swap over to a different API
 
     * Currently the 'Later' forecast will display data for later in the user's location when they make the API call, rather than the search location.
